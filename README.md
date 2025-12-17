@@ -1,4 +1,4 @@
-# fiverfox
+# fiversox
 
 A tiny Firefox (MV3) extension that toggles Firefox’s proxy between:
 
@@ -37,10 +37,9 @@ After edits:
 
 - Requires `proxy` + `storage` permissions.
 - Firefox may require enabling **Run in Private Windows → Allow** for proxy control:
-  - `about:addons` → Extensions → **fiverfox** → **Run in Private Windows**
+  - `about:addons` → Extensions → **fiversox** → **Run in Private Windows**
 
 ## Troubleshooting
 
 - If you see “Proxy is controlled by another extension.” disable the other extension or uninstall it.
 - If you see “Proxy settings are not controllable.” your Firefox environment/policies may block extensions from controlling proxy.
-
