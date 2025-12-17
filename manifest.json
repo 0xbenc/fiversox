@@ -1,21 +1,20 @@
 {
   "manifest_version": 3,
   "name": "fiverfox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Quickly toggle Firefox SOCKS5 proxy (localhost) on/off with optional DNS proxying.",
   "permissions": ["proxy", "storage"],
   "action": {
     "default_title": "fiverfox",
     "default_popup": "popup/popup.html",
     "default_icon": {
-      "16": "icons/icon.svg",
-      "32": "icons/icon.svg",
-      "48": "icons/icon.svg"
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png"
     }
   },
   "icons": {
-    "48": "icons/icon.svg",
-    "96": "icons/icon.svg"
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
   }
 }
-
