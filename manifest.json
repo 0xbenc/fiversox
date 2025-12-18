@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "fiversox",
-  "version": "0.1.9",
+  "version": "1.0.0",
   "description": "Quickly toggle Firefox SOCKS5 proxy (localhost) on/off with optional DNS proxying.",
   "permissions": ["proxy", "storage", "tabs"],
   "action": {
