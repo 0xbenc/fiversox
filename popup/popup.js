@@ -47,13 +47,38 @@ function parsePort(value) {
   return asNumber;
 }
 
+function getSocksHost(value) {
+  return String(
+    value?.socks ??
+      value?.socksHost ??
+      value?.socks_host ??
+      value?.sockshost ??
+      ""
+  )
+    .trim()
+    .toLowerCase();
+}
+
+function getSocksPort(value) {
+  return parsePort(
+    value?.socksPort ?? value?.socks_port ?? value?.socksport ?? null
+  );
+}
+
+function getSocksVersion(value) {
+  return value?.socksVersion ?? value?.socks_version ?? value?.socksversion;
+}
+
+function getProxyDNS(value) {
+  return Boolean(value?.proxyDNS ?? value?.proxyDns ?? value?.proxy_dns);
+}
+
 function isLikelyOurManualProxy(value) {
   if (!value || value.proxyType !== "manual") return false;
-  const host = String(value.socks ?? value.socksHost ?? "").trim().toLowerCase();
-  const isLocal =
-    host === "localhost" || host === "127.0.0.1" || host === "::1";
+  const host = getSocksHost(value);
+  const isLocal = host === "localhost" || host === "127.0.0.1" || host === "::1";
   if (!isLocal) return false;
-  const socksVersionRaw = value.socksVersion ?? value.socks_version;
+  const socksVersionRaw = getSocksVersion(value);
   if (
     socksVersionRaw !== undefined &&
     socksVersionRaw !== null &&
@@ -61,8 +86,30 @@ function isLikelyOurManualProxy(value) {
   ) {
     return false;
   }
-  const port = parsePort(value.socksPort ?? value.socks_port);
+  const port = getSocksPort(value);
   if (!port) return false;
+  return true;
+}
+
+function proxyMatchesUiState(value, uiState) {
+  if (!uiState?.enabled) return false;
+  if (!value || value.proxyType !== "manual") return false;
+  const port = getSocksPort(value);
+  if (!port) return false;
+  if (port !== uiState.port) return false;
+  if (getProxyDNS(value) !== Boolean(uiState.dns)) return false;
+  const socksVersionRaw = getSocksVersion(value);
+  if (
+    socksVersionRaw !== undefined &&
+    socksVersionRaw !== null &&
+    Number(socksVersionRaw) !== 5
+  ) {
+    return false;
+  }
+  const host = getSocksHost(value);
+  if (host && host !== "localhost" && host !== "127.0.0.1" && host !== "::1") {
+    return false;
+  }
   return true;
 }
 
@@ -94,17 +141,23 @@ async function readProxySettings() {
   return { value, levelOfControl };
 }
 
-function formatCurrentProxy(value) {
+function formatCurrentProxy(value, uiState) {
   const t = value?.proxyType;
   if (!t) return "Unknown";
   if (t === "none" || t === "direct") return "Off (no proxy)";
+  if (proxyMatchesUiState(value, uiState)) {
+    return `On (SOCKS5 localhost:${uiState.port}${uiState.dns ? ", DNS" : ""})`;
+  }
   if (isLikelyOurManualProxy(value)) {
-    const port =
-      parsePort(value.socksPort ?? value.socks_port) ?? DEFAULTS.port;
-    const dns = Boolean(value.proxyDNS);
+    const port = getSocksPort(value) ?? DEFAULTS.port;
+    const dns = getProxyDNS(value);
     return `On (SOCKS5 localhost:${port}${dns ? ", DNS" : ""})`;
   }
-  if (t === "manual") return "Manual proxy (custom)";
+  if (t === "manual") {
+    const port = getSocksPort(value) ?? uiState?.port ?? DEFAULTS.port;
+    const dns = getProxyDNS(value) || Boolean(uiState?.dns);
+    return `On (SOCKS5 localhost:${port}${dns ? ", DNS" : ""})`;
+  }
   if (t === "system") return "Use system proxy settings";
   if (t === "autoDetect") return "Auto-detect proxy settings";
   if (t === "autoConfig") return "PAC URL";
@@ -120,8 +173,8 @@ function computeSyncedStateFromProxy(value, fallbackState) {
     return {
       enabled: true,
       port:
-        parsePort(value.socksPort ?? value.socks_port) ?? fallbackState.port,
-      dns: Boolean(value.proxyDNS)
+        getSocksPort(value) ?? fallbackState.port,
+      dns: getProxyDNS(value)
     };
   }
 
@@ -275,7 +328,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     render(state);
-    setStatus(formatCurrentProxy(value));
+    setStatus(formatCurrentProxy(value, state));
   } catch (err) {
     console.error(err);
     setError(err instanceof Error ? err.message : String(err));
