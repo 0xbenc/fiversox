@@ -31,6 +31,10 @@ let portHotChange = false;
 
 const PROBE_URL = "https://github.com/robots.txt";
 const PROBE_TIMEOUT_MS = 2500;
+const PRIVATE_WINDOWS_HELP_URL =
+  "https://github.com/0xbenc/fiversox/blob/main/docs/private-windows.md";
+const PRIVATE_WINDOWS_HELP_MESSAGE =
+  "Must Enable Private Windows. Turn proxy OFF before opening help -";
 
 let probeDebounceTimer = null;
 let probeSeq = 0;
@@ -73,7 +77,26 @@ function setPortStatus(kind) {
 }
 
 function setError(msg) {
+  if (msg && /private browsing permission/i.test(msg)) {
+    setErrorWithHelp(PRIVATE_WINDOWS_HELP_MESSAGE, PRIVATE_WINDOWS_HELP_URL);
+    return;
+  }
   errorEl.textContent = msg ?? "";
+}
+
+function setErrorWithHelp(msg, helpUrl) {
+  if (!msg) {
+    setError("");
+    return;
+  }
+  errorEl.textContent = "";
+  const text = document.createTextNode(`${msg} `);
+  const link = document.createElement("a");
+  link.href = helpUrl;
+  link.textContent = "help";
+  link.target = "_blank";
+  link.rel = "noreferrer";
+  errorEl.append(text, link);
 }
 
 function updateLivePortFromProxy(value) {
@@ -660,6 +683,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       setError("Proxy settings are not controllable in this context.");
     } else if (levelOfControl === "controlled_by_other_extensions") {
       setError("Proxy is controlled by another extension.");
+    }
+
+    const incognitoAllowed = await browser.extension.isAllowedIncognitoAccess();
+    if (!incognitoAllowed) {
+      setErrorWithHelp(
+        PRIVATE_WINDOWS_HELP_MESSAGE,
+        PRIVATE_WINDOWS_HELP_URL
+      );
     }
 
     const synced = computeSyncedStateFromProxy(value, state);
