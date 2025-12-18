@@ -14,15 +14,9 @@ This extension **directly sets Firefox’s global proxy configuration** via `bro
 - Turning **On** overwrites whatever proxy settings you had.
 - Turning **Off** sets “No proxy” (it does not restore previous settings).
 
-## Install / Dev
+## Install for development
 
-1. Open `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on…**
-3. Select `manifest.json`
-
-After edits:
-
-- In `about:debugging`, click **Reload** for the add-on.
+[Developer notes](dx.md)
 
 ## Usage
 
@@ -44,3 +38,8 @@ After edits:
 
 - If you see “Proxy is controlled by another extension.” disable the other extension or uninstall it.
 - If you see “Proxy settings are not controllable.” your Firefox environment/policies may block extensions from controlling proxy.
+
+## Contributors
+
+- 0xbenc
+- basedvik
