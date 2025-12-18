@@ -14,8 +14,8 @@ If the popup shows the error "Must Enable Private Windows - help", the extension
 
 **Open the Fiversox extension details**
 
-![Find and open Fiversox](docs/images/private-windows-toggle.png)
+![Find and open Fiversox](images/private-windows-toggle.png)
 
 **Allow Private Windows**
 
-![Run in Private Windows setting](docs/images/private-windows-allowed.png)
+![Run in Private Windows setting](images/private-windows-allowed.png)
