@@ -5,7 +5,7 @@
 - `manifest.json`: MV3 WebExtension entrypoint (permissions + popup wiring).
 - `popup/`: UI and logic (`popup.html`, `popup.css`, `popup.js`).
 - `icons/`: extension icon assets (SVG used for all sizes).
-- Docs: `README.md` (usage), `docs/dx.md` (dev notes), `PLAN.md`/`PROGRESS.md` (roadmap).
+- Docs: `README.md` (usage), `docs/dx.md` (dev notes)
 
 ## Build, Test, and Development Commands
 
@@ -39,6 +39,8 @@ No automated test suite is currently included; rely on manual verification:
 - Git history uses short, subject-only commit messages (e.g., `README`, `initial work`); keep subjects concise and action-oriented.
 - PRs should include: summary of behavior changes, step-by-step test notes, and screenshots for popup UI changes.
 - For user-facing changes, bump `manifest.json` `version` and update `README.md` when needed.
+- Don't commit unless explicitly told to. And then only assume you had permission that once
+- Don't push unless explicitly told to. And then only assume you had permission that once
 
 ## Security & Configuration Tips
 
