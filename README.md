@@ -1,8 +1,8 @@
 # fiversox
 
-A tiny Firefox (MV3) extension that toggles Firefox’s proxy between:
-
 ![Fiversox popup](docs/images/popup.png)
+
+A tiny Firefox (MV3) extension that toggles Firefox’s proxy between:
 
 - **Off**: no proxy
 - **On**: manual **SOCKS v5** proxy at `localhost:<port>` (default `1080`)
